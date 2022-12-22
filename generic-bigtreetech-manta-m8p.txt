@@ -1,0 +1,282 @@
+#Subscribe to SaigeSauce :)
+
+
+# This file contains common pin mappings for the BIGTREETECH Manta M8P
+# To use this config, the firmware should be compiled for the
+# STM32G0B1 with a "8KiB bootloader" and USB communication.
+# See docs/Config_Reference.md for a description of parameters.
+
+[stepper_x]
+step_pin: PE2
+dir_pin: !PB4
+enable_pin: !PC11
+microsteps: 16
+rotation_distance: 40
+endstop_pin: ^PF3
+position_endstop: 360
+position_max: 360
+homing_speed: 80
+
+[tmc2209 stepper_x]
+uart_pin: PC10
+#diag_pin: PF3
+run_current: 0.580
+stealthchop_threshold: 999999
+
+
+[stepper_y]
+step_pin: PF12
+dir_pin: !PF11
+enable_pin: !PB3
+microsteps: 16
+rotation_distance: 40
+endstop_pin: ^PF4
+position_endstop: 355
+position_max: 355
+homing_speed: 80
+
+[tmc2209 stepper_y]
+uart_pin: PF13
+#diag_pin: PF4
+run_current: 0.580
+stealthchop_threshold: 999999
+
+
+[stepper_z]
+step_pin: PD7
+dir_pin: !PD6
+enable_pin: !PF10
+microsteps: 16
+rotation_distance: 4.0
+endstop_pin: probe:z_virtual_endstop  #(originally ^PF5) 11272022 altered for bltouch
+#position_endstop: 0 #commented for bltouch 11272022
+position_max: 400
+position_min: -5.0
+homing_speed: 8
+second_homing_speed: 3
+homing_retract_dist: 3
+
+[tmc2209 stepper_z]
+uart_pin: PF9
+#diag_pin: PF5
+run_current: 0.58
+stealthchop_threshold: 999999
+
+
+# Motor4
+# The M8P only has 4 heater outputs which leaves an extra stepper
+# This can be used for a second Z stepper, dual_carriage, extruder co-stepper,
+# or other accesory such as an MMU
+[stepper_z1]    #11272022 uncommented and added _z1
+step_pin: PD3 #11272022 uncommented
+dir_pin: !PD2 #11272022 uncommented and added !
+enable_pin: !PD5 #11272022 uncommented and added !
+microsteps: 16 #11272022 added
+rotation_distance: 4 #11272022 added
+#endstop_pin: PC0
+
+
+[tmc2209 stepper_z1]
+uart_pin: PD4
+#diag_pin: PC0
+run_current: 0.58
+stealthchop_threshold: 999999
+
+
+[extruder]
+step_pin: PC9
+dir_pin: PC8
+enable_pin: !PD1
+microsteps: 16
+rotation_distance: 4.637
+nozzle_diameter: 0.6
+filament_diameter: 1.75
+max_extrude_only_distance: 500
+max_extrude_only_velocity: 120
+pressure_advance: 0.015 
+pressure_advance_smooth_time: 0.04 #to be calibrated
+heater_pin: PE3 # HE0
+sensor_pin: PA1 # T0
+sensor_type: Generic 3950
+#control: pid
+#pid_Kp: 22.2
+#pid_Ki: 1.08
+#pid_Kd: 114
+min_temp: 0
+max_temp: 250
+
+[tmc2209 extruder]
+uart_pin: PD0
+interpolate: true
+run_current: 0.85 #since we have TMC2209
+hold_current: 0.100
+sense_resistor: 0.11 #since we have TMC2209
+stealthchop_threshold: 0
+driver_TBL: 0
+driver_HEND: 6
+driver_HSTRT: 7
+driver_TOFF: 4
+
+
+#can use these later, but currently no need
+
+#[filament_switch_sensor material_0]
+#switch_pin: PC1
+
+# Motor6
+#[extruder1]
+#step_pin: PA10
+#dir_pin: PD15
+#enable_pin: !PA15
+#heater_pin: PB5 # HE1
+#sensor_pin: PA2 # T1
+#...
+
+#[filament_switch_sensor material_1]
+#switch_pin: PC2
+
+# Motor7
+#[extruder2]
+#step_pin: PD12
+#dir_pin: PD11
+#enable_pin: !PD14
+#heater_pin: PB6 # HE2
+#sensor_pin: PA3 # T2
+#...
+
+# Motor8
+#[extruder3]
+#step_pin: PD10
+#dir_pin: PD8
+#enable_pin: !PD9
+#heater_pin: PE1 # HE3
+#sensor_pin: PA4 # T3
+#...
+
+[heater_bed]
+heater_pin: PB7
+sensor_pin: PA0 # TB
+sensor_type: ATC Semitec 104GT-2
+#control: watermark
+min_temp: 0
+max_temp: 130
+max_power: 0.8
+
+[bed_mesh]
+speed: 100
+horizontal_move_z: 8
+mesh_min: 50, 50
+mesh_max: 300,300
+probe_count: 6 #5,5
+fade_start: 1
+fade_end: 2
+
+[fan]
+pin: PE6
+
+[heater_fan fan1] #11272022 uncommented
+pin: PE0
+
+[heater_fan fan2] #11272022 uncommented
+pin: PC12
+
+#[heater_fan fan3]
+#pin: PE5
+
+#[heater_fan fan4]
+#pin: PE4
+#tachometer_pin: PC13
+
+#[heater_fan fan5]
+#pin: PB8
+#tachometer_pin: PC14
+
+#[heater_fan fan6]
+#pin: PB9
+#tachometer_pin: PC15
+
+[mcu]
+serial: /dev/serial/by-id/***CUSTOM TO YOU***
+
+[printer]
+kinematics: cartesian
+max_velocity: 220
+max_accel: 3000
+max_z_velocity: 5
+max_z_accel: 100
+
+########################################
+# TMC2209 configuration
+########################################
+
+# Uncommented x-extruder steppers and moved to motor code blocks, remaining are unused steppers/motors
+
+
+#[tmc2209 extruder1]
+#uart_pin: PF8
+#run_current: 0.800
+#stealthchop_threshold: 999999
+
+#[tmc2209 extruder2]
+#uart_pin: PD13
+#run_current: 0.800
+#stealthchop_threshold: 999999
+
+#[tmc2209 extruder3]
+#uart_pin: PC7
+#run_current: 0.800
+#stealthchop_threshold: 999999
+
+
+[board_pins]
+aliases:
+    # EXP1 header
+    EXP1_1=PE9, EXP1_2=PE10,
+    EXP1_3=PE11, EXP1_4=PE12,
+    EXP1_5=PE13, EXP1_6=PE14,    # Slot in the socket on this side
+    EXP1_7=PE15, EXP1_8=PB10,
+    EXP1_9=<GND>, EXP1_10=<5V>,
+
+    # EXP2 header
+    EXP2_1=PB14, EXP2_2=PB13,
+    EXP2_3=PF7, EXP2_4=PB12,
+    EXP2_5=PE7, EXP2_6=PB11,      # Slot in the socket on this side
+    EXP2_7=PE8, EXP2_8=<RST>,
+    EXP2_9=<GND>, EXP2_10=PC5
+
+# See the sample-lcd.cfg file for definitions of common LCD displays.
+
+[bltouch]   #uncommented 11272022
+sensor_pin: PB2
+control_pin: PB1
+x_offset: -45.39 #12032022 added
+y_offset: -6.84 #12032022 added
+#z_offset: 3 #11272022 added
+speed: 20 #11272022 added
+samples: 2 #11272022 added
+stow_on_each_sample: False  #11272022 added
+probe_with_touch_mode: True  #11272022 added
+
+#11272022 added safe z home
+[safe_z_home]
+home_xy_position: 180, 187 # Change coordinates to the center of your print bed
+speed: 50
+z_hop: 10                 # Move up 10mm
+z_hop_speed: 5
+
+# Proximity switch
+#[probe]
+#pin: PF6
+
+#[output_pin ps_on_pin]
+#pin: PC3
+
+#[neopixel my_neopixel_1]
+#pin: PC6
+
+#[neopixel my_neopixel_2]
+#pin: PA9
+
+#[hall_filament_width_sensor]
+#adc1: PC5
+#adc2: PB0
